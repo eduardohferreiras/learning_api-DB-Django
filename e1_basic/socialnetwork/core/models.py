@@ -1,5 +1,4 @@
 from django.db import models
-import json
 
 class Profile():   
     def __init__(self, email, isHidden = False):
