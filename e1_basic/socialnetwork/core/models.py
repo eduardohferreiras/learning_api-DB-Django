@@ -1,7 +1,8 @@
 from django.db import models
 
 class Profile():   
-    def __init__(self, email, isHidden = False):
+    def __init__(self, email, id, isHidden = False):
+        self.id = id
         self.email = email
         self.isHidden = isHidden
     
