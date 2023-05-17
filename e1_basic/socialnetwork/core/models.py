@@ -7,7 +7,6 @@ class Profile():
         self.isHidden = isHidden
     
 class Connection():
-    
-    def __init__(self, email_1, email_2):
-        self.email_1 = email_1
-        self.email_2 = email_2
+    def __init__(self, id1, id2):
+        self.id1 = id1
+        self.id2 = id2

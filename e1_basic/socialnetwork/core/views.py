@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Profile
-from .serializers import ProfileSerializer
+from .serializers import ProfileSerializer, ConnectionSerializer
 from .mock_db import *  
 
 
@@ -21,6 +21,18 @@ def  profiles_list(request):
             return Response(responseSerializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
+def  connections_list(request):
+    if request.method == 'GET':
+        data = []
+        for profileConnectionsRowKey in ConnectionBase.keys():
+            profileConnectionsRowSerializer = ConnectionSerializer(ConnectionBase[profileConnectionsRowKey], many=True)
+            data.extend(profileConnectionsRowSerializer.data)
+        return Response(data)
+    else:
+        return Response("TBD")
+
 
 @api_view(['GET'])
 def profile_detail(request, id):

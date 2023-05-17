@@ -6,3 +6,6 @@ class ProfileSerializer(serializers.Serializer):
     email = serializers.EmailField()
     isHidden = serializers.BooleanField(required=False, default=False)
 
+class ConnectionSerializer(serializers.Serializer):
+    id1 = serializers.IntegerField()
+    id2 = serializers.IntegerField()
