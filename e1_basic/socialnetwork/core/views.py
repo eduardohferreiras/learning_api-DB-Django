@@ -8,15 +8,19 @@ from .serializers import ProfileSerializer
 from .mock_db import *  
 
 
-# Create your views here.
 @api_view(['GET', 'POST'])
 def  profiles_list(request):
     if request.method == 'GET':
         serializer = ProfileSerializer(ProfileBase.values(), many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
-        serializer = ProfileSerializer(data=request.data)
-        return Response(serializer.data)
+        requestSerializer = ProfileSerializer(data=request.data)
+        if requestSerializer.is_valid():
+            print(requestSerializer.validated_data)
+            responseSerializer = ProfileSerializer(create_new_profile(email = requestSerializer.validated_data['email'], isHidden = requestSerializer.validated_data['isHidden']))
+            return Response(responseSerializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def profile_detail(request, id):

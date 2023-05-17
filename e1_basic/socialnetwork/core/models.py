@@ -6,7 +6,6 @@ class Profile():
         self.email = email
         self.isHidden = isHidden
     
-
 class Connection():
     
     def __init__(self, email_1, email_2):

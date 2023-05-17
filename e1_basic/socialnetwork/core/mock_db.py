@@ -5,21 +5,22 @@ lastID = 0
 ProfileBase = {}
 ConnectionBase = {}
 
+def create_new_profile(email, isHidden = False):
+    global lastID
+    global ProfileBase
+    global ConnectionBase
+
+    profile = Profile(id = lastID + 1, email = email, isHidden = isHidden)
+    lastID = lastID + 1
+    ProfileBase[profile.id] = profile
+    ConnectionBase[profile.id] = []
+    return profile
+
 #Mock profiles creation and registration
-mockProfile1 = Profile(id= lastID+1, email = "1@email.com")
-lastID = lastID + 1
-ProfileBase[mockProfile1.id] = mockProfile1
-ConnectionBase[mockProfile1.id] = []
+mockProfile1 = create_new_profile(email = "1@email.com")
+mockProfile2 = create_new_profile(email = "2@email.com")
+mockProfile3 = create_new_profile(email = "3@email.com")
 
-mockProfile2 = Profile(id= lastID+1, email = "2@email.com")
-lastID = lastID + 1
-ProfileBase[mockProfile2.id] = mockProfile2
-ConnectionBase[mockProfile2.id] = []
-
-mockProfile3 = Profile(id= lastID+1, email = "3@email.com")
-lastID = lastID + 1
-ConnectionBase[mockProfile3.id] = []
-ProfileBase[mockProfile3.id] = mockProfile3
 
 #Conection creation (1<>2)
 ConnectionBase[mockProfile1.id].append(mockProfile2.id)
