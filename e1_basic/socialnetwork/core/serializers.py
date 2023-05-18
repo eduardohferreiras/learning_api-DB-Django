@@ -10,6 +10,12 @@ class ConnectionSerializer(serializers.Serializer):
     id1 = serializers.IntegerField()
     id2 = serializers.IntegerField()
 
+    def validate(self, data):
+        if (not data['id1'] in ProfileBase.keys()) or (not data['id2'] in ProfileBase.keys()):
+            raise serializers.ValidationError("Profile IDs must exist before creating a connection.")
+        else:
+            return data
+
 def get_all_connections_serialized():
     data = []
     for profileConnectionsRowKey in ConnectionBase.keys():
