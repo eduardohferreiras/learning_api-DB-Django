@@ -6,11 +6,13 @@ class ProfileSerializer(serializers.Serializer):
     email = serializers.EmailField()
     isHidden = serializers.BooleanField(required=False, default=False)
 
+
 class ConnectionSerializer(serializers.Serializer):
     id1 = serializers.IntegerField()
     id2 = serializers.IntegerField()
 
     def validate(self, data):
+        #TO DO: padronizar o check de existencia do profile. No view está como ProfileBase.get(id) == None
         if (not data['id1'] in ProfileBase.keys()) or (not data['id2'] in ProfileBase.keys()):
             raise serializers.ValidationError("Profile IDs must exist before creating a connection.")
         else:
