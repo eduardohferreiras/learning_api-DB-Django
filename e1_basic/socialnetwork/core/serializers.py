@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.models import Profile
+from .mock_db import *  
 
 class ProfileSerializer(serializers.Serializer):
     id = serializers.IntegerField(required = False)
@@ -9,3 +9,10 @@ class ProfileSerializer(serializers.Serializer):
 class ConnectionSerializer(serializers.Serializer):
     id1 = serializers.IntegerField()
     id2 = serializers.IntegerField()
+
+def get_all_connections_serialized():
+    data = []
+    for profileConnectionsRowKey in ConnectionBase.keys():
+        profileConnectionsRowSerializer = ConnectionSerializer(ConnectionBase[profileConnectionsRowKey], many=True)
+        data.extend(profileConnectionsRowSerializer.data)
+    return data

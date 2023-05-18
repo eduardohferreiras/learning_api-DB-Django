@@ -1,11 +1,9 @@
-from django.shortcuts import render
-from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Profile
-from .serializers import ProfileSerializer, ConnectionSerializer
+from .serializers import ProfileSerializer, ConnectionSerializer, get_all_connections_serialized
 from .mock_db import *  
+
 
 
 @api_view(['GET', 'POST'])
@@ -16,22 +14,23 @@ def  profiles_list(request):
     elif request.method == 'POST':
         requestSerializer = ProfileSerializer(data=request.data)
         if requestSerializer.is_valid():
-            print(requestSerializer.validated_data)
             responseSerializer = ProfileSerializer(create_new_profile(email = requestSerializer.validated_data['email'], isHidden = requestSerializer.validated_data['isHidden']))
             return Response(responseSerializer.data)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(requestSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST'])
 def  connections_list(request):
     if request.method == 'GET':
-        data = []
-        for profileConnectionsRowKey in ConnectionBase.keys():
-            profileConnectionsRowSerializer = ConnectionSerializer(ConnectionBase[profileConnectionsRowKey], many=True)
-            data.extend(profileConnectionsRowSerializer.data)
+        data = get_all_connections_serialized()
         return Response(data)
-    else:
-        return Response("TBD")
+    elif request.method == 'POST':
+        requestSerializer = ConnectionSerializer(data=request.data)
+        if requestSerializer.is_valid():
+            create_new_connection(id1 = requestSerializer.validated_data['id1'],id2 = requestSerializer.validated_data['id2'])
+            data = get_all_connections_serialized()
+            return Response(data)
+        return Response(requestSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
