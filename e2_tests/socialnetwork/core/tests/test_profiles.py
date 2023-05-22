@@ -1,6 +1,16 @@
 from rest_framework import status
 from rest_framework.test import APIClient
 
+class TestGetProfile:
+    def test_if_get_profiles_return_data_200(self):
+        #Act
+        client = APIClient()
+        response = client.get('/profiles/', {})
+
+        #Assert
+        assert response.status_code == status.HTTP_200_OK
+        assert response.status_code != None
+
 class TestCreateProfile:
     def test_if_no_email_return_400(self):
         #Act
@@ -81,3 +91,69 @@ class TestGetProfileDetails:
         assert response.data['id'] > 0
         assert response.data['email'].find('@')
         assert isinstance(response.data['isHidden'], bool)
+
+class TestGetConnections:
+    def test_if_get_connections_return_data_200(self):
+        #Act
+        client = APIClient()
+        response = client.get('/connections/', {})
+
+        #Assert
+        assert response.status_code == status.HTTP_200_OK
+        assert response.status_code != None
+
+class TestCreateConnections:
+    def test_if_no_ids_return_400(self):
+        #Act
+        client = APIClient()
+        response = client.post('/connections/', {})
+
+        #Assert
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_if_ids_not_valid_return_400(self):
+        #Act
+        client = APIClient()
+        response = client.post('/connections/', {"id1": "test"})
+
+        #Assert
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_if_ids_not_found_return_400(self):
+        #Act
+        client = APIClient()
+        response = client.post('/connections/', {"id1": -1, "id2": -1})
+
+        #Assert
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.data["non_field_errors"] != None
+
+    def test_if_ids_valid_create_both_connections(self):
+        #Act
+        client = APIClient()
+        response = client.post('/connections/', {"id1": 1, "id2": 2})
+
+        #Assert
+        conn1 = {"id1": 1, "id2": 2}
+        conn2 = {"id1": 2, "id2": 1}
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.data.index(conn1) != None
+        assert response.data.index(conn2) != None
+
+class TestGetSugestion():
+    def test_if_id_is_not_valid_return_400(self):
+        #Act
+        client = APIClient()
+        response = client.get('/connection_recommendations/-1', {})
+
+        #Assert
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_if_profile_id_exist_return_recomendation_and_200(self):
+        #Act
+        client = APIClient()
+        response = client.get('/connection_recommendations/1', {})
+
+        #Assert
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data != None

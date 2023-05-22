@@ -41,7 +41,6 @@ mockProfile3 = create_new_profile(email = "7@email.com")
 mockProfile3 = create_new_profile(email = "8@email.com")
 
 #Conection creation (1<>2)
-create_new_connection(1, 2)
 create_new_connection(1, 3)
 create_new_connection(1, 4)
 create_new_connection(5, 2)

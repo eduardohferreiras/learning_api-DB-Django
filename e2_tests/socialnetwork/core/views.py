@@ -48,7 +48,7 @@ def connections_list(request):
         if requestSerializer.is_valid():
             create_new_connection(id1 = requestSerializer.validated_data['id1'],id2 = requestSerializer.validated_data['id2'])
             data = get_all_connections_serialized()
-            return Response(data)
+            return Response(data, status=status.HTTP_201_CREATED)
         return Response(requestSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
