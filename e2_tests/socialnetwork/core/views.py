@@ -13,9 +13,10 @@ def profiles_list(request):
         requestSerializer = ProfileSerializer(data=request.data)
         if requestSerializer.is_valid():
             responseSerializer = ProfileSerializer(create_new_profile(email = requestSerializer.validated_data['email'], isHidden = requestSerializer.validated_data['isHidden']))
-            return Response(responseSerializer.data)
+            return Response(responseSerializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(requestSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
 
 @api_view(['GET','PATCH'])
 def profile_detail(request, id):
