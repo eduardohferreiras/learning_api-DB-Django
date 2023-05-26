@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .mock_db import *  
+#from .mock_db import *  
 
 class ProfileSerializer(serializers.Serializer):
     id = serializers.IntegerField(required = False)

@@ -20,15 +20,9 @@ class Migration(migrations.Migration):
             INSERT INTO core_profile (email, isHidden) VALUES ('6@email.com', false);
             INSERT INTO core_profile (email, isHidden) VALUES ('7@email.com', false);
             INSERT INTO core_profile (email, isHidden) VALUES ('8@email.com', false);
+            INSERT INTO core_profile (email, isHidden) VALUES ('dblivechecker@email.com', false);
 
         """, """
-            DELETE FROM core_profile WHERE email = '1@email.com';
-            DELETE FROM core_profile WHERE email = '2@email.com';
-            DELETE FROM core_profile WHERE email = '3@email.com';
-            DELETE FROM core_profile WHERE email = '4@email.com';
-            DELETE FROM core_profile WHERE email = '5@email.com';
-            DELETE FROM core_profile WHERE email = '6@email.com';
-            DELETE FROM core_profile WHERE email = '7@email.com';
-            DELETE FROM core_profile WHERE email = '8@email.com';
+            DELETE FROM core_profile;
         """)
     ]

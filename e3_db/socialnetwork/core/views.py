@@ -1,18 +1,24 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from .models import Profile
 from .serializers import ProfileSerializer, ConnectionSerializer, get_all_connections_serialized
-from .mock_db import *  
+#from .mock_db import *  
 
 @api_view(['GET', 'POST'])
 def profiles_list(request):
     if request.method == 'GET':
-        serializer = ProfileSerializer(ProfileBase.values(), many=True)
+        profiles = Profile.objects.all()
+        serializer = ProfileSerializer(profiles, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
         requestSerializer = ProfileSerializer(data=request.data)
         if requestSerializer.is_valid():
-            responseSerializer = ProfileSerializer(create_new_profile(email = requestSerializer.validated_data['email'], isHidden = requestSerializer.validated_data['isHidden']))
+            profile = Profile()
+            profile.email = requestSerializer.data['email']
+            profile.isHidden = requestSerializer.data['isHidden']
+            profile.save()
+            responseSerializer = ProfileSerializer(profile)
             return Response(responseSerializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(requestSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
