@@ -54,37 +54,46 @@ def connections_list(request):
     elif request.method == 'POST':
         requestSerializer = ConnectionSerializer(data=request.data)
         if requestSerializer.is_valid():
-            create_new_connection(id1 = requestSerializer.validated_data['id1'],id2 = requestSerializer.validated_data['id2'])
-            data = get_all_connections_serialized()
-            return Response(data, status=status.HTTP_201_CREATED)
+            connection1 = Connection()
+            connection1.id1 = requestSerializer.validated_data['id1']
+            connection1.id2 = requestSerializer.validated_data['id2']
+            connection1.save()
+            
+            connection2 = Connection()
+            connection2.id1 = requestSerializer.validated_data['id2']
+            connection2.id2 = requestSerializer.validated_data['id1']
+            connection2.save()
+
+            connections = Connection.objects.all()
+            responseSerializer = ConnectionSerializer(connections, many=True)
+            return Response(responseSerializer.data, status=status.HTTP_201_CREATED)
         return Response(requestSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
 def connection_recomendation(request, id):
-    if(ProfileBase.get(id) == None):
+    if(not Profile.objects.filter(pk=id).exists()):
         return Response(status = status.HTTP_400_BAD_REQUEST)
     
-    #TO DO: testar mais.    
     recommendations = {}
     
-    #for each connection of the profile
-    for idConnection in ConnectionBase.get(id):
-        #for each connection of the connection
-        for idConnectionConnection in ConnectionBase.get(idConnection.id2):
+    #for each friend of the profile
+    for connection in Connection.objects.filter(id1 = id):
+        #for each friend of the the friend
+        for connectionOfConnection in Connection.objects.filter(id1 = connection.id2):
             #score of this profile increases, if not hidden
-            if (not ProfileBase[idConnectionConnection.id2].isHidden) and (idConnectionConnection.id2 != id):
-                if recommendations.get(idConnectionConnection.id2) == None:
-                    recommendations[idConnectionConnection.id2] = 1
+            profile = Profile.objects.get(pk = connectionOfConnection.id2.id)
+            if (not profile.isHidden) and (profile.pk != id):
+                if recommendations.get(profile.pk) == None:
+                    recommendations[profile.pk] = 1
                 else:
-                    recommendations[idConnectionConnection.id2] = recommendations[idConnectionConnection.id2] + 1
+                    recommendations[profile.pk] = recommendations[profile.pk] + 1
 
     #remove profiles that are already connected
-    for idConnection in ConnectionBase.get(id):
-        if idConnection.id2 in recommendations.keys():
-            recommendations.pop(idConnection.id2)
-    
-    #remove profiles that are already connected
-    sortedRecomendation = dict(sorted(recommendations.items(), key=lambda item: item[1], reverse=True))
+    for connection in Connection.objects.filter(id1 = id):
+        if connection.id2.id in recommendations.keys():
+            recommendations.pop(connection.id2.id)
     
     #return orderded list of recommendations 
+    sortedRecomendation = dict(sorted(recommendations.items(), key=lambda item: item[1], reverse=True))
+
     return Response(sortedRecomendation)

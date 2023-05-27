@@ -14,9 +14,3 @@ class ConnectionSerializer(serializers.Serializer):
     id2 = serializers.PrimaryKeyRelatedField(
         queryset = Profile.objects.all()
     )
-
-    def validate(self, data):
-        if (not Profile.objects.filter(pk=self.id1).exists()) or (not Profile.objects.filter(pk=self.id2).exists()):
-            raise serializers.ValidationError("Profile IDs must exist before creating a connection.")
-        else:
-            return data

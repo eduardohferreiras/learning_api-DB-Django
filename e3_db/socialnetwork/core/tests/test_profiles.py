@@ -108,7 +108,7 @@ class TestGetConnections:
         assert response.status_code == status.HTTP_200_OK
         assert response.status_code != None
 
-@pytest.mark.skip()
+@pytest.mark.django_db
 class TestCreateConnections:
     def test_if_no_ids_return_400(self):
         #Act
@@ -133,7 +133,6 @@ class TestCreateConnections:
 
         #Assert
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert response.data["non_field_errors"] != None
 
     def test_if_ids_valid_create_both_connections(self):
         #Act
@@ -147,7 +146,7 @@ class TestCreateConnections:
         assert response.data.index(conn1) != None
         assert response.data.index(conn2) != None
 
-@pytest.mark.skip()
+@pytest.mark.django_db
 class TestGetSugestion():
     def test_if_id_is_not_valid_return_400(self):
         #Act
