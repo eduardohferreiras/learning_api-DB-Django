@@ -1,8 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Profile
-from .serializers import ProfileSerializer, ConnectionSerializer, get_all_connections_serialized
+from .models import Profile, Connection
+from .serializers import ProfileSerializer, ConnectionSerializer
 #from .mock_db import *  
 
 @api_view(['GET', 'POST'])
@@ -48,8 +48,9 @@ def profile_detail(request, id):
 @api_view(['GET', 'POST'])
 def connections_list(request):
     if request.method == 'GET':
-        data = get_all_connections_serialized()
-        return Response(data)
+        connections = Connection.objects.all()
+        serializer = ConnectionSerializer(connections, many=True)
+        return Response(serializer.data)
     elif request.method == 'POST':
         requestSerializer = ConnectionSerializer(data=request.data)
         if requestSerializer.is_valid():

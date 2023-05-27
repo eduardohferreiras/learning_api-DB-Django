@@ -97,7 +97,7 @@ class TestGetProfileDetails:
         assert response.data['email'].find('@')
         assert isinstance(response.data['isHidden'], bool)
 
-@pytest.mark.skip()
+@pytest.mark.django_db
 class TestGetConnections:
     def test_if_get_connections_return_data_200(self):
         #Act
