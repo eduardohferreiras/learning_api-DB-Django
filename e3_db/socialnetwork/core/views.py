@@ -33,15 +33,16 @@ def profile_detail(request, id):
             serializer = ProfileSerializer(Profile.objects.get(pk = id))
             return Response(serializer.data)
     elif request.method == 'PATCH':
-        if(ProfileBase.get(id) == None):
+        if(not Profile.objects.filter(pk=id).exists()):
             return Response(status = status.HTTP_404_NOT_FOUND)
         else:
             print(request.data)
             if (not 'isHidden' in request.data.keys()) or (not isinstance(request.data['isHidden'], bool)):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             else:
-                ProfileBase[id].isHidden = request.data['isHidden']
-                serializer = ProfileSerializer(ProfileBase.get(id))
+                profile = Profile.objects.get(pk = id)
+                profile.isHidden = request.data['isHidden']
+                serializer = ProfileSerializer(profile)
                 return Response(serializer.data)
 
 @api_view(['GET', 'POST'])

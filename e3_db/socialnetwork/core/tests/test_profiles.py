@@ -49,7 +49,7 @@ class TestCreateProfile:
         assert response.status_code == status.HTTP_201_CREATED
         assert response.data['isHidden'] == True
 
-@pytest.mark.skip()
+@pytest.mark.django_db
 class TestPatchProfile:
     def test_if_try_to_update_id_that_dont_exist_return_404(self):
         #Act
