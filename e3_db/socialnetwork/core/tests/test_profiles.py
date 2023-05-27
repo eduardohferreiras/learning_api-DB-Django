@@ -76,7 +76,7 @@ class TestPatchProfile:
         assert response.status_code == status.HTTP_200_OK
         assert isinstance(response.data['isHidden'], bool)
 
-@pytest.mark.skip()
+@pytest.mark.django_db
 class TestGetProfileDetails:
     def test_if_profile_id_dont_exist_get_404(self):
         #Act

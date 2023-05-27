@@ -27,10 +27,10 @@ def profiles_list(request):
 @api_view(['GET','PATCH'])
 def profile_detail(request, id):
     if request.method == 'GET':
-        if(ProfileBase.get(id) == None):
+        if(not Profile.objects.filter(pk=id).exists()):
             return Response(status = status.HTTP_404_NOT_FOUND)
         else:
-            serializer = ProfileSerializer(ProfileBase.get(id))
+            serializer = ProfileSerializer(Profile.objects.get(pk = id))
             return Response(serializer.data)
     elif request.method == 'PATCH':
         if(ProfileBase.get(id) == None):
